@@ -2,13 +2,11 @@
 
 FROM golang:1.18-alpine
 
-WORKDIR /app
+WORKDIR ~/go/src/github.com/exhibit-io/tracker
 
-COPY go.mod ./
-COPY *.go ./
-COPY tracker ./tracker
+COPY . .
 
-RUN go mod tidy && go build -o /tracker
+RUN go build -o /tracker
 
 EXPOSE 8080
 
