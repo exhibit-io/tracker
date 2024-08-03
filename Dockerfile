@@ -2,7 +2,7 @@
 
 FROM golang:1.18-alpine
 
-WORKDIR ~/go/src/github.com/exhibit-io/tracker
+WORKDIR /app
 
 COPY . .
 
