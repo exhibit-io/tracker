@@ -14,6 +14,6 @@ func (t TrackerConfig) GetAddr() string {
 func LoadTrackerConfig() TrackerConfig {
 	return TrackerConfig{
 		Host: getEnv("HOST", "localhost"),
-		Port: getEnv("PORT", "3000"),
+		Port: getEnv("PORT", "8080"),
 	}
 }
