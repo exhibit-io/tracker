@@ -22,7 +22,8 @@ var hash = sha256.New()
 
 func Init(config *config.Config) {
 	rdb = redis.NewClient(&redis.Options{
-		Addr: config.Redis.GetAddr(), // Redis server address
+		Addr:     config.Redis.GetAddr(), // Redis server address
+		Password: config.Redis.Password,
 	})
 	if rdb.Ping(ctx).Err() != nil {
 		log.Fatal("Failed to connect to Redis")
