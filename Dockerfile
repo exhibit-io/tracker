@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.18-alpine
+FROM golang:1.22.5-alpine
 
 WORKDIR /app
 
 COPY . .
 
-RUN go build -o /tracker
+RUN go mod tidy && go build -o /tracker
 
 EXPOSE 8080
 
