@@ -13,7 +13,6 @@ go.work
 
 # Go modules
 go.sum
-go.mod
 
 # Dependency directories
 vendor/
