@@ -1,6 +1,6 @@
 module main
 
-go 1.22.5
+go 1.18
 
 replace github.com/exhibit-io/tracker => ./tracker
 
