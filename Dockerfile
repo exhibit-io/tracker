@@ -10,8 +10,8 @@ RUN go mod download
 
 COPY *.go ./
 
-RUN go build -o /go-app
+RUN go build -o /tracker
 
 EXPOSE 8080
 
-CMD [ "/go-app" ]
+CMD [ "/tracker" ]

@@ -13,7 +13,7 @@ services:
       dockerfile: Dockerfile
     container_name: go_app
     ports:
-      - "8080:3000"
+      - "8080:8080"
     env_file:
       - .env
     depends_on:
