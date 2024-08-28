@@ -33,7 +33,7 @@ func getEnvAsBool(key string, defaultValue bool) bool {
 		return defaultValue
 	}
 	value, err := strconv.ParseBool(valueStr)
-	if err != null {
+	if err != nil {
 		return defaultValue
 	}
 	return value
