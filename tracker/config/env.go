@@ -26,3 +26,15 @@ func getEnvAsInt(key string, defaultValue int) int {
 	}
 	return value
 }
+
+func getEnvAsBool(key string, defaultValue bool) bool {
+	valueStr, exists := os.LookupEnv(key)
+	if !exists {
+		return defaultValue
+	}
+	value, err := strconv.ParseBool(valueStr)
+	if err != null {
+		return defaultValue
+	}
+	return value
+}

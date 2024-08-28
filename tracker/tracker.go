@@ -19,8 +19,7 @@ import (
 var ctx = context.Background()
 var rdb *redis.Client
 var hash = sha256.New()
-var domain = ""
-var cookieName = "fingerprint"
+var cookieConfig = config.TrackerCookieConfig{}
 
 func Init(config *config.Config) {
 	rdb = redis.NewClient(&redis.Options{
@@ -31,8 +30,7 @@ func Init(config *config.Config) {
 		log.Fatal("Failed to connect to Redis")
 		panic("Failed to connect to Redis")
 	}
-	cookieName = config.Tracker.CookieName
-	domain = config.Tracker.CookieDomain
+	cookieConfig = config.Tracker.CookieConfig
 	log.Println("Connected to Redis on " + config.Redis.GetAddr())
 }
 
@@ -64,12 +62,12 @@ func TrackerHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 
 		// Set the fingerprint as a cookie
 		http.SetCookie(w, &http.Cookie{
-			Name:     cookieName,
+			Name:     cookieConfig.Name,
 			Value:    fingerprint,
 			Path:     "/",
-			Domain:   domain,
-			Secure:   true, // Uncomment if using HTTPS
-			HttpOnly: true, // Uncomment to prevent client-side scripts from accessing the cookie
+			Domain:   cookieConfig.Domain,
+			Secure:   cookieConfig.Secure,   // Uncomment if using HTTPS
+			HttpOnly: cookieConfig.HttpOnly, // Uncomment to prevent client-side scripts from accessing the cookie
 		})
 	}
 

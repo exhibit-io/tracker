@@ -5,8 +5,14 @@ import "fmt"
 type TrackerConfig struct {
 	Host         string
 	Port         string
-	CookieName   string
-	CookieDomain string
+	CookieConfig TrackerCookieConfig
+}
+
+type TrackerCookieConfig struct {
+	Name     string
+	Domain   string
+	Secure   bool
+	HttpOnly bool
 }
 
 func (t TrackerConfig) GetAddr() string {
@@ -14,10 +20,15 @@ func (t TrackerConfig) GetAddr() string {
 }
 
 func LoadTrackerConfig() TrackerConfig {
+	cookieConfig := TrackerCookieConfig{
+		Name:     getEnv("COOKIE_NAME", "fingerprint"),
+		Domain:   getEnv("COOKIE_DOMAIN", ""),
+		Secure:   getEnvAsBool("COOKIE_SECURE", false),
+		HttpOnly: getEnvAsBool("COOKIE_HTTPONLY", false),
+	}
 	return TrackerConfig{
 		Host:         getEnv("HOST", "localhost"),
 		Port:         getEnv("PORT", "8080"),
-		CookieName:   getEnv("COOKIE_NAME", "fingerprint"),
-		CookieDomain: getEnv("COOKIE_DOMAIN", ""),
+		CookieConfig: cookieConfig,
 	}
 }
