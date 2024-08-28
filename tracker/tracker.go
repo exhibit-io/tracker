@@ -61,12 +61,11 @@ func TrackerHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 
 		// Set the fingerprint as a cookie
 		http.SetCookie(w, &http.Cookie{
-			Name:  "fingerprint",
-			Value: fingerprint,
-			Path:  "/",
-			Domain: ".onrender.com",
-			// Secure: true, // Uncomment if using HTTPS
-			// HttpOnly: true, // Uncomment to prevent client-side scripts from accessing the cookie
+			Name:     "fingerprint",
+			Value:    fingerprint,
+			Path:     "/",
+			Secure:   true, // Uncomment if using HTTPS
+			HttpOnly: true, // Uncomment to prevent client-side scripts from accessing the cookie
 		})
 	}
 
