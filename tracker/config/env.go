@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"strconv"
+	"strings"
 )
 
 // getEnv retrieves an environment variable's value or returns a default value if not set.
@@ -37,4 +38,13 @@ func getEnvAsBool(key string, defaultValue bool) bool {
 		return defaultValue
 	}
 	return value
+}
+
+func getEnvAsArray(key string, defaultValue []string) []string {
+	valueStr, exists := os.LookupEnv(key)
+	if !exists {
+		return defaultValue
+	}
+	values := strings.Split(valueStr, ",")
+	return values
 }

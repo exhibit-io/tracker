@@ -28,13 +28,12 @@ func Init(config *config.Config) {
 	})
 	if rdb.Ping(ctx).Err() != nil {
 		log.Fatal("Failed to connect to Redis")
-		panic("Failed to connect to Redis")
 	}
 	cookieConfig = config.Tracker.CookieConfig
 	log.Println("Connected to Redis on " + config.Redis.GetAddr())
 }
 
-func TrackerHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func GetFingerprintHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	// get the path from the query parameter
 	path := r.URL.Query().Get("path")
 
@@ -42,7 +41,7 @@ func TrackerHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	ip := getIPAddress(r)
 
 	// Check if the fingerprint cookie exists
-	cookie, err := r.Cookie("fingerprint")
+	cookie, err := r.Cookie(cookieConfig.Name)
 	fingerprint := ""
 	visits := 1
 
@@ -72,7 +71,6 @@ func TrackerHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 	}
 
 	// Respond with a success message
-	w.WriteHeader(http.StatusOK)
 	response := map[string]string{
 		"ip":          ip,
 		"userAgent":   r.UserAgent(),
@@ -80,7 +78,10 @@ func TrackerHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		"path":        path,
 		"visits":      fmt.Sprintf("%d", visits),
 	}
-	json.NewEncoder(w).Encode(response)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		http.Error(w, fmt.Sprintf("Could not encode response: %v", err), http.StatusInternalServerError)
+	}
+
 	log.Printf(">> %-7s %03d /%s", fingerprint[:7], visits, path)
 }
 

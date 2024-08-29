@@ -17,11 +17,12 @@ func main() {
 
 	// Use a Router to handle requests
 	router := httprouter.New()
-	router.GET("/", tracker.TrackerHandler)
+	router.GET("/", tracker.GetFingerprintHandler)
 
-	// Setup middlewares.  For this we're basically adding:
-	//	- Support for CORS to make JSONP work.
-	handler := cors.Default().Handler(router)
+	handler := cors.New(cors.Options{
+		AllowedOrigins:   config.Cors.AllowedOrigins,
+		AllowCredentials: config.Cors.AllowCredentials,
+	}).Handler(router)
 
 	log.Println("Starting HTTP server on:", config.Tracker.GetAddr())
 	log.Fatal(http.ListenAndServe(config.Tracker.GetAddr(), handler))
