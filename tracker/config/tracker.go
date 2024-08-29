@@ -27,7 +27,7 @@ func LoadTrackerConfig() TrackerConfig {
 		HttpOnly: getEnvAsBool("COOKIE_HTTPONLY", false),
 	}
 	return TrackerConfig{
-		Host:         getEnv("HOST", "localhost"),
+		Host:         getEnv("HOST", "0.0.0.0"),
 		Port:         getEnv("PORT", "8080"),
 		CookieConfig: cookieConfig,
 	}
