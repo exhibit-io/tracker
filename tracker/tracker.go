@@ -18,7 +18,6 @@ import (
 
 var ctx = context.Background()
 var rdb *redis.Client
-var hash = sha256.New()
 var cookieConfig = config.TrackerCookieConfig{}
 
 func Init(config *config.Config) {
@@ -108,6 +107,6 @@ func getIPAddress(r *http.Request) string {
 }
 
 func createFingerprint(ip string, userAgent string) string {
-	hash.Write([]byte(ip + userAgent))
-	return fmt.Sprintf("%x", hash.Sum(nil))
+	sum := sha256.Sum256([]byte(ip + userAgent))
+	return fmt.Sprintf("%x", sum)
 }
