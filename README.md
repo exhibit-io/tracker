@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `tracker` package is a lightweight web tracking service that logs and tracks user visits to specified paths on a web server. It uses Redis for storing tracking data and allows tracking users based on a generated fingerprint, which is stored in a cookie. The package provides an easy way to track page visits, the number of times a user has visited a specific path, and the user’s IP address and User-Agent.
+The `tracker` package is a lightweight web tracking service that logs and tracks user visits to specified paths on a web server. It uses Redis for storing tracking data and allows tracking users based on a generated fingerprint, which is stored in a cookie. The package provides an easy way to track page visits, the number of times a user has visited a specific path, and the user's IP address and User-Agent.
 
 ## Features
 

@@ -1,12 +1,12 @@
 package config
 
-// CorsConfig represents the configuration for Redis.
+// CorsConfig represents the configuration for CORS.
 type CorsConfig struct {
 	AllowedOrigins   []string
 	AllowCredentials bool
 }
 
-// LoadCorsConfig loads the Redis configuration from environment variables.
+// LoadCorsConfig loads the CORS configuration from environment variables.
 func LoadCorsConfig() CorsConfig {
 	return CorsConfig{
 		AllowedOrigins:   getEnvAsArray("CORS_ALLOWED_ORIGINS", []string{"*"}),
