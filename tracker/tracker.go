@@ -117,8 +117,8 @@ func getIPAddress(r *http.Request) string {
 
 func createFingerprint(ip string, userAgent string) string {
 	h := sha256.New()
-	// Pre-allocate buffer to reduce allocations
-	// Write both IP and userAgent in one operation
-	h.Write([]byte(ip + userAgent))
+	// Write IP and userAgent separately to avoid string concatenation allocation
+	h.Write([]byte(ip))
+	h.Write([]byte(userAgent))
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
