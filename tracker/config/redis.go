@@ -2,8 +2,6 @@ package config
 
 import (
 	"fmt"
-	"net/url"
-	"strconv"
 )
 
 // RedisConfig represents the configuration for Redis.
@@ -12,17 +10,6 @@ type RedisConfig struct {
 	Port     string
 	Password string
 	DB       int
-}
-
-// GetURL constructs and returns the Redis URL as a *url.URL type.
-func (r RedisConfig) GetURL() (*url.URL, error) {
-	url := &url.URL{
-		Scheme: "redis",
-		Host:   fmt.Sprintf("%s:%s", r.Host, r.Port),
-		Path:   strconv.Itoa(r.DB),
-	}
-
-	return url, nil
 }
 
 // GetAddr returns the Redis address in the format host:port.
