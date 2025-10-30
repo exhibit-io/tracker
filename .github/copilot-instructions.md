@@ -24,7 +24,7 @@ This repository contains a lightweight web tracking service written in Go that l
 
 ## Technology Stack
 
-- **Language**: Go 1.22.5
+- **Language**: Go 1.22+
 - **Database**: Redis (for tracking data storage)
 - **HTTP Router**: julienschmidt/httprouter
 - **CORS**: rs/cors
@@ -126,8 +126,7 @@ When adding new features:
 2. Copy `.env.example` to `.env` and configure as needed
 3. Start Redis: `docker-compose up -d`
 4. Run tests: `go test ./...`
-5. Build: `go build`
-6. Run: `./main`
+5. Build and run: `go build && ./main` or `go run main.go`
 
 ## Questions or Issues?
 
