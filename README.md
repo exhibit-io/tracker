@@ -125,3 +125,6 @@ The package logs each tracked visit, including the first seven characters of the
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
+
+
+go mod tidy
