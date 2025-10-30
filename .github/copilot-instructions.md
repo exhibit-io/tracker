@@ -43,9 +43,11 @@ This repository contains a lightweight web tracking service written in Go that l
 ### Building and Testing
 
 - **Build**: `go build -v ./...`
-- **Test**: `go test ./...`
-- **Dependencies**: `go mod tidy`
+- **Test**: `go test ./... && cd tracker && go test ./...` (tests both main and tracker modules)
+- **Dependencies**: `go mod tidy` (run in both root and tracker directories)
 - **Run locally**: Use `docker-compose up` to start Redis, then run the application
+
+Note: This project uses nested Go modules (main module at root, tracker submodule in ./tracker). When testing, you need to test both modules.
 
 ### Architecture Patterns
 
@@ -116,7 +118,7 @@ When adding new features:
 
 ### CI/CD
 
-- All pull requests must pass the `go test ./...` check
+- All pull requests must pass tests for both the main and tracker modules
 - Docker images are built and published automatically
 - Tests run on every push to master and on all pull requests
 
@@ -125,7 +127,7 @@ When adding new features:
 1. Clone the repository
 2. Copy `.env.example` to `.env` and configure as needed
 3. Start Redis: `docker-compose up -d`
-4. Run tests: `go test ./...`
+4. Run tests: `go test ./... && cd tracker && go test ./...` (tests both modules)
 5. Build and run: `go build && ./main` or `go run main.go`
 
 ## Questions or Issues?
