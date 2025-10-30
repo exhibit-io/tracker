@@ -44,6 +44,7 @@ This repository contains a lightweight web tracking service written in Go that l
 
 - **Build**: `go build -v ./...`
 - **Test**: `go test ./... && cd tracker && go test ./...` (tests both main and tracker modules)
+- **Benchmark**: `go test -bench=. -benchmem ./... && cd tracker && go test -bench=. -benchmem ./...`
 - **Dependencies**: `go mod tidy` (run in both root and tracker directories)
 - **Run locally**: Use `docker-compose up` to start Redis, then run the application
 
