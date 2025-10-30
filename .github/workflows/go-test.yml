@@ -19,4 +19,4 @@ jobs:
       - name: Tidy
         run: go mod tidy
       - name: Run tests
-        run: go test
+        run: go test ./tracker
