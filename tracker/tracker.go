@@ -22,8 +22,10 @@ var cookieConfig = config.TrackerCookieConfig{}
 
 func Init(config *config.Config) {
 	rdb = redis.NewClient(&redis.Options{
-		Addr:     config.Redis.GetAddr(), // Redis server address
-		Password: config.Redis.Password,
+		Addr:         config.Redis.GetAddr(), // Redis server address
+		Password:     config.Redis.Password,
+		PoolSize:     10,  // Connection pool size for better performance
+		MinIdleConns: 5,   // Minimum idle connections to maintain
 	})
 	if rdb.Ping(ctx).Err() != nil {
 		log.Fatal("Failed to connect to Redis")
@@ -49,7 +51,7 @@ func GetFingerprintHandler(w http.ResponseWriter, r *http.Request, _ httprouter.
 		fingerprint = cookie.Value
 
 		// Increment the number of visits for the path
-		visits = int(rdb.IncrBy(ctx, getRedisKey(fingerprint, path), 1).Val())
+		visits = int(rdb.Incr(ctx, getRedisKey(fingerprint, path)).Val())
 
 	} else {
 		// Create a new fingerprint using IP and User-Agent if cookie doesn't exist
@@ -70,6 +72,7 @@ func GetFingerprintHandler(w http.ResponseWriter, r *http.Request, _ httprouter.
 	}
 
 	// Respond with a success message
+	w.Header().Set("Content-Type", "application/json")
 	response := map[string]string{
 		"ip":          ip,
 		"userAgent":   r.UserAgent(),
@@ -81,7 +84,12 @@ func GetFingerprintHandler(w http.ResponseWriter, r *http.Request, _ httprouter.
 		http.Error(w, fmt.Sprintf("Could not encode response: %v", err), http.StatusInternalServerError)
 	}
 
-	log.Printf(">> %-7s %03d /%s", fingerprint[:7], visits, path)
+	// Log with safe substring handling
+	fpLog := fingerprint
+	if len(fpLog) > 7 {
+		fpLog = fpLog[:7]
+	}
+	log.Printf(">> %-7s %03d /%s", fpLog, visits, path)
 }
 
 func getRedisKey(fingerprint, path string) string {
@@ -91,10 +99,11 @@ func getRedisKey(fingerprint, path string) string {
 func getIPAddress(r *http.Request) string {
 	// Check X-Forwarded-For header first
 	if forwardedFor := r.Header.Get("X-Forwarded-For"); forwardedFor != "" {
-		ips := strings.Split(forwardedFor, ",")
-		if len(ips) > 0 && ips[0] != "" {
-			return strings.TrimSpace(ips[0])
+		// Take the first IP if multiple are present (client IP)
+		if idx := strings.IndexByte(forwardedFor, ','); idx > 0 {
+			return strings.TrimSpace(forwardedFor[:idx])
 		}
+		return strings.TrimSpace(forwardedFor)
 	}
 
 	// Fall back to X-Real-IP header
@@ -108,6 +117,7 @@ func getIPAddress(r *http.Request) string {
 
 func createFingerprint(ip string, userAgent string) string {
 	h := sha256.New()
+	// Write IP and userAgent separately to avoid string concatenation allocation
 	h.Write([]byte(ip))
 	h.Write([]byte(userAgent))
 	return fmt.Sprintf("%x", h.Sum(nil))
