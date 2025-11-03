@@ -16,5 +16,15 @@ jobs:
         with:
           go-version-file: go.mod
           cache: true
+      - name: Tidy
+        run: |
+          go mod tidy
+          cd tracker && go mod tidy
       - name: Run tests
-        run: go test ./...
+        run: |
+          go test ./...
+          cd tracker && go test ./...
+      - name: Run benchmarks
+        run: |
+          go test -bench=. -benchmem ./... 2>&1  | tail -20  
+          cd tracker && go test -bench=. -benchmem ./... 2>&1 | tail -20 
